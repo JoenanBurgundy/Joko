@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="action_commission_invoice" model="ir.actions.act_window">
+			<field name="name">Commissions</field>
+			<field name="res_model">account.invoice</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('commission','!=',False)]</field>
+			<!-- <field name="search_view_id" ref="view_account_search" /> -->
+			<!-- <field name="help" type="html"> <p class="oe_view_nocontent_create"> 
+				Click to add an account. </p> <p> An account is part of a ledger allowing 
+				your company to register all kinds of debit and credit transactions. Companies 
+				present their annual accounts in two main parts: the balance sheet and the 
+				income statement (profit and loss account). The annual accounts of a company 
+				are required by law to disclose a certain amount of information. </p> </field> -->
+		</record>
+
+
+		<record id="account.action_invoice_tree2" model="ir.actions.act_window">
+			<field name="domain">[('type','in',('in_invoice','in_refund')),('commission','=',False)]
+			</field>
+		</record>
+
+		<menuitem id="submenu_commission_invoice" parent="sales_team.menu_base_partner"
+			name="Commission" sequence="5" />
+		<menuitem action="action_commission_invoice" id="menu_commission_invoice"
+			parent="submenu_commission_invoice" />
+	</data>
+</odoo>

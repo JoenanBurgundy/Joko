@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="sale_order_form" model="ir.ui.view">
+			<field name="name">sale.order.form</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='partner_id']" position="after">
+					<field name="partner_order_count" attrs="{'invisible': [('partner_id','=',False)]}" />
+				</xpath>
+				<field name="order_line" position="after">
+					<group>
+						<group>
+							<field name="bank_charge" widget="monetary"
+								options="{'currency_field': 'currency_id'}" />
+							<field name="fee" widget="monetary"
+								options="{'currency_field': 'currency_id'}" />
+							<field name="commission_amount" widget="monetary"
+								options="{'currency_field': 'currency_id'}" />
+						</group>
+						<group></group>
+					</group>
+				</field>
+			</field>
+		</record>
+
+		<record id="view_quotation_count_tree" model="ir.ui.view">
+			<field name="name">sale.quotation.count.tree</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_quotation_tree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='partner_id']" position="after">
+					<field name="partner_order_count" />
+				</xpath>
+				<xpath expr="//field[@name='amount_total']" position="after">
+					<field name="bank_charge" widget="monetary"
+						options="{'currency_field': 'currency_id'}" />
+					<field name="fee" widget="monetary" options="{'currency_field': 'currency_id'}" />
+					<field name="commission_amount" widget="monetary"
+						options="{'currency_field': 'currency_id'}" />
+				</xpath>
+			</field>
+		</record>
+
+		<record id="view_order_tree" model="ir.ui.view">
+			<field name="name">sale.order.count.tree</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_tree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='partner_id']" position="after">
+					<field name="partner_order_count" />
+				</xpath>
+				<xpath expr="//field[@name='amount_total']" position="after">
+					<field name="bank_charge" widget="monetary"
+						options="{'currency_field': 'currency_id'}" />
+					<field name="fee" widget="monetary" options="{'currency_field': 'currency_id'}" />
+					<field name="commission_amount" widget="monetary"
+						options="{'currency_field': 'currency_id'}" />
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>
