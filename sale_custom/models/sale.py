@@ -19,18 +19,7 @@ class SaleOrder(models.Model):
         for order in self:
             order.commission_amount = order.amount_untaxed - (order.bank_charge + order.fee)
             
-    @api.depends('partner_id')
-    def _get_partner_sale(self):
-        for order in self:
-            sale_ids = self.search([
-                ('partner_id', '=', order.partner_id.id),
-                ('date_order', '<', order.date_order),
-                ('state', 'in', ('sale', 'done'))
-            ])
-            order.partner_order_count = len(sale_ids)
-
-    partner_order_count = fields.Integer(string='Repeat Order',
-                                         compute='_get_partner_sale', store=True)
+    partner_order_count = fields.Integer(string='Repeat Order', default=0)
     commission_amount = fields.Float(string='Commission', compute='_get_commission', store=True)
     bank_charge = fields.Float(string='Bank Charge')
     fee = fields.Float(string='Fee')
@@ -42,3 +31,20 @@ class SaleOrder(models.Model):
         new_date = date + datetime.timedelta(days=14)
         self.validity_date = new_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return {}
+    
+    @api.multi
+    @api.onchange('partner_id')
+    def onchange_validity_date(self):
+        counts = [order.partner_order_count for order in self.search([('partner_id', '=', self.partner_id.id)])]
+        if counts:
+            i = max(counts)
+            self.partner_order_count = i
+        return {}
+    
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        for order in self:
+            counts = [order.partner_order_count for order in self.search([('partner_id', '=', self.partner_id.id)])]
+            if counts:
+                i = max(counts)
+                order.partner_order_count = i + 1
