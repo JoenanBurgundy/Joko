@@ -41,10 +41,12 @@ class SaleOrder(models.Model):
             self.partner_order_count = i
         return {}
     
+    @api.multi
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for order in self:
-            counts = [order.partner_order_count for order in self.search([('partner_id', '=', self.partner_id.id)])]
+            counts = [sale.partner_order_count for sale in self.search([('partner_id', '=', order.partner_id.id)])]
             if counts:
                 i = max(counts)
                 order.partner_order_count = i + 1
+        return res
