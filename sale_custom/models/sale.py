@@ -26,7 +26,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     @api.onchange('date_order')
-    def onchange_validity_date(self):
+    def onchange_date_order(self):
         date = datetime.datetime.strptime(self.date_order, DEFAULT_SERVER_DATETIME_FORMAT)
         new_date = date + datetime.timedelta(days=14)
         self.validity_date = new_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
